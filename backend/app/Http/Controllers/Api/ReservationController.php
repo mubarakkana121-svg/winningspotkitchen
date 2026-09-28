@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers\Api;
+use App\Http\Controllers\Controller;use App\Models\Reservation;use Illuminate\Http\Request;
+class ReservationController extends Controller { public function index(){return Reservation::latest('reserved_at')->paginate(30);} public function store(Request $r){$data=$r->validate(['name'=>'required|string|max:120','email'=>'required|email:rfc|max:255','phone'=>'required|string|max:30','guest_count'=>'required|integer|min:1|max:20','reserved_at'=>'required|date|after:now','occasion'=>'nullable|string|max:100','notes'=>'nullable|string|max:1000']);return response()->json(Reservation::create($data),201);} public function updateStatus(Request $r,Reservation $reservation){$reservation->update($r->validate(['status'=>'required|in:pending,confirmed,seated,completed,cancelled']));return $reservation;} }
